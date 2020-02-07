@@ -1,7 +1,45 @@
-﻿@page "/"
+@page "/"
+@inject HttpClient Http
 
 <h1>Hello, world!</h1>
 
-Welcome to your new app.
+<p>Welcome to your new app.</p>
+
+<div>API INFORMATION</div>
+<div>-------------------------------</div>
+@if (requestSuccess == false) 
+{
+    <p>@status</p>
+    <p>An error has occured calling the API.</p>
+}
+else
+{
+    <p>@status</p>
+}
+
+<button @onclick="ChangeStatus">Change value</button>
 
 <SurveyPrompt Title="How is Blazor working for you?" />
+
+@code {
+    // http://localhost:8393
+
+    private string status = "not running!";
+    private bool requestSuccess = true;
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            status = await Http.GetJsonAsync<string>("https://localhost:8394/api/ApiRunningController");
+        }
+        catch(Exception e)
+        {
+            requestSuccess = false;
+            status = "ERROR: " + e.Message;
+        }
+
+    }
+    private void ChangeStatus(){
+        status += "!";
+    }
+}
