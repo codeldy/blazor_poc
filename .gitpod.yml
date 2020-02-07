@@ -3,3 +3,4 @@ image:
 vscode:
   extensions:
     - ms-vscode.csharp@1.21.10:zH/4ZA1wr+0IOl8DDfUGBQ==
+    - formulahendry.vscode-mysql@0.4.0:ozffYq4AkDKzFalv61HFIw==

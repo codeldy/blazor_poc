@@ -5,41 +5,25 @@
 
 <p>Welcome to your new app.</p>
 
-<div>API INFORMATION</div>
-<div>-------------------------------</div>
-@if (requestSuccess == false) 
-{
-    <p>@status</p>
-    <p>An error has occured calling the API.</p>
-}
-else
-{
-    <p>@status</p>
-}
-
-<button @onclick="ChangeStatus">Change value</button>
-
-<SurveyPrompt Title="How is Blazor working for you?" />
+<div>@status</div>
+<p>@requestSuccess</p>
 
 @code {
-    // http://localhost:8393
-
-    private string status = "not running!";
-    private bool requestSuccess = true;
+    private string status = "";
+    bool requestSuccess = true;
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            status = await Http.GetJsonAsync<string>("https://localhost:8394/api/ApiRunningController");
+            string url = "https://8394-d2876538-b2d9-4e56-89df-0c2e11f8ee62.ws-eu01.gitpod.io/ApiRunningController";
+            HttpResponseMessage response = await Http.GetAsync(url);
+            status = response.StatusCode.ToString();
+            response.EnsureSuccessStatusCode();
         }
         catch(Exception e)
         {
             requestSuccess = false;
-            status = "ERROR: " + e.Message;
+            status = "ERROR: " + e.ToString();
         }
-
-    }
-    private void ChangeStatus(){
-        status += "!";
     }
 }
