@@ -1,29 +1,41 @@
 @page "/"
-@inject HttpClient Http
 
-<h1>Hello, world!</h1>
+@using BlazorApp.Models
+@inject UserService uService
 
-<p>Welcome to your new app.</p>
+<h1>Hello</h1>
 
-<div>@status</div>
-<p>@requestSuccess</p>
+@if(users == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Password</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in users)
+            {
+                <tr>
+                    <td>@user.Username</td>
+                    <td>@user.Password</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 @code {
-    private string status = "";
-    bool requestSuccess = true;
+    private User[] users;
+
     protected override async Task OnInitializedAsync()
     {
-        try
-        {
-            string url = "https://8394-d2876538-b2d9-4e56-89df-0c2e11f8ee62.ws-eu01.gitpod.io/ApiRunningController";
-            HttpResponseMessage response = await Http.GetAsync(url);
-            status = response.StatusCode.ToString();
-            response.EnsureSuccessStatusCode();
-        }
-        catch(Exception e)
-        {
-            requestSuccess = false;
-            status = "ERROR: " + e.ToString();
-        }
+        users = await uService.GetUsersAsync();
     }
+
 }
